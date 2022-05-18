@@ -101,26 +101,37 @@ if(isset($_POST['submit']))
                                   
 
                                         <div class="form-row mb-4">
-                                          <p>faq Text</p>
-                                           <div class="form-group col-md-12">
-                                              
-                                                 
+                                          <a href="javascript:void(0);" id="addRow"  title="Add field" style="text-decoration: none;font-weight: 500;">
+                                               <img src="http://127.0.0.1:8000/assets/images/add-icon.png"> Add Questions</a>
+       
 
-                                           <table>
-                                                <tr>
-                                                  <th>#</th>
-                                                  <th>Question</th>
-                                                  <th>Answer</th>
-                                                </tr>
-
-                                                <tbody id="tbody"></tbody>
-                                            </table>
-
-                                              <p>
-                                                <button type="button" class="btn btn-success mt-3" onclick="addItem();">Add Question</button>
-                                              </p>
-
-
+      
+                                                   <div id="inputFormRow">
+                                                           <div class="form-group">
+                                                               <label>Quiz Title</label>
+                                                               <input type="text" class="form-control" name="qtitle[]" required>
+                                                           </div>
+                                                           <div class="form-group">
+                                                               <label>Quiz Options(Comma seperated)</label>
+                                                               <input type="text" class="form-control" name="options[]" required>
+                                                           </div>
+                                                           <div class="row">
+                                                               <div class="col-md-6">
+                                                                   <div class="form-group">
+                                                                       <label>Answers</label><br>
+                                                                       <input type="text" class="form-control" name="answer[]" required>
+                                                                   </div>
+                                                               </div>
+                                                               <div class="col-md-6">
+                                                                   <div class="form-group">
+                                                                       <label>Marks</label>
+                                                                       <input type="text" class="form-control" name="marks[]"  required>
+                                                                   </div>
+                                                               </div>
+                                                           </div>
+                                                           <button id="removeRow" type="button" class="btn btn-danger">Remove</button>       
+                                                   </div> 
+                                                   <div id="newRow"></div>   
 
 
 
@@ -140,78 +151,7 @@ if(isset($_POST['submit']))
 </div>
 
 
-            <div class="col-md-12">
-                <div class="card card-topline-red">
-                    <div class="card-head">
-                        <header>faq Table</header>
-
-                    </div>
-                    <div class="card-body ">
-                       <table class="table table-striped table-bordered table-hover table-checkable order-column" style="width: 100%" id="example4">
-                            <thead>
-                                <tr>
-
-                                    <th> Sno </th>
-                                    <th>Product Name</th>
-                                    <th> Question </th>
-                                    <th> Answer </th>
-                                    <th> Actions </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php 
-                        $ii='1';
-                        
-
-                    $sql=$conn->query("SELECT * FROM `tbl_faq` ORDER BY `fid` DESC");
-                                while($row=$sql->fetch_assoc())
-                                {                                  
-                                  $iiid=$row['product_id'];
-                                  $sqlp=$conn->query("SELECT title FROM `tl_product` WHERE detail_id='$iiid' ORDER BY `detail_id` DESC");
-                                $rowp=$sqlp->fetch_assoc();
-
-                               ?>
-
-                                <tr class="odd gradeX">
-                                    <td><span><?= $ii++;?></span>
-                                    </td>
-                                    
-                                    <td> <span> <?= $rowp['title'];?> </span> </td>
-                                     <td> <span> <?= $row['question'];?> </span> </td>
-                                      <td> <span> <?= $row['answer'];?> </span> </td>
-                                   
-                                    
-                                    <td class="valigntop">
-                                        <div class="btn-group">
-                                            <button class="btn btn-xs deepPink-bgcolor dropdown-toggle no-margin" type="button" data-toggle="dropdown" aria-expanded="false"> Actions
-                                                <i class="fa fa-angle-down"></i>
-                                            </button>
-                                            <ul class="dropdown-menu pull-left" role="menu">
-                                                <li>
-                                                    <a href="faq_edit.php?id=<?= $row['fid'];?>">
-                                                        <i class="icon-docs"></i> Edit </a>
-                                                </li>
-                                                
-                                                <li>
-                                                    <a href="faq_delete.php?id=<?= $row['fid'];?>" onclick="return confirm('Are you sure?')">
-                                                        <i class="icon-trash"></i> Delete </a>
-                                                </li>
-
-                                            </ul>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <?php
-                                                    }
-
-                                                    // while end
-                                            ?>
-
-                                
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+         
             </div>
         </div>
 
@@ -236,21 +176,43 @@ if(isset($_POST['submit']))
         text-align: center;
   }
 </style>
-<script>
-  var items = 0;
-  function addItem() {
-    items++;
 
-    var html = "<tr>";
-      html += "<td>" + items + "</td>";
-      html += "<td> <input type='text' class='form-control' required name='question[]' id='inputAddress2' placeholder='Question'></td>";
-      html += "<td><textarea class='form-control'  name='answer[]' id='answer"+ items +"' placeholder='Reply'></textarea></td>";
-    html += "</tr>";
+<script type="text/javascript">
+        // add row
+        $("#addRow").click(function () {
+            var html = '';
+            html += '<div id="inputFormRow">';
+            html += '<div class="form-group">';
+            html += '<label>Quiz Title</label>';
+            html += '<input type="text" class="form-control" name="qtitle[]" required>';
+            html += '</div>';
+            html += '<div class="form-group">';
+            html += '<label>Quiz Options(Comma seperated)</label>';
+            html += '<input type="text" class="form-control" name="options[]" required>';
+            html += '</div>';
+            html += '<div class="row">';
+            html += '<div class="col-md-6">';
+            html += '<div class="form-group">';
+            html += '<label>Answers</label><br>';
+            html += '<input type="text" class="form-control" name="answer[]" required>';
+            html += '</div>';
+            html += '</div>';
+            html += '<div class="col-md-6">';
+            html += '<div class="form-group">';
+            html += '<label>Marks</label>';
+            html += '<input type="text" class="form-control" name="marks[]"  required>';
+            html += '</div>';
+            html += '</div>';
+            html += '</div>';
+            html += '<button id="removeRow" type="button" class="btn btn-danger">Remove</button>'; 
+            html += '</div>';
 
-    var row = document.getElementById("tbody").insertRow();
-    row.innerHTML = html;
-    
-    CKEDITOR.replace( "answer"+ items +"");
-    
-  }
-</script>
+            $('#newRow').append(html);
+        });
+
+        // remove row
+        $(document).on('click', '#removeRow', function () {
+            $(this).closest('#inputFormRow').remove();
+        });
+    </script>
+
